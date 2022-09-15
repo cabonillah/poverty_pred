@@ -1,3 +1,5 @@
+# TODO: delete unnecessary variables before line 33
+
 library("tidyverse")
 
 df_per <- readRDS("../stores/train_personas.Rds")
@@ -19,6 +21,7 @@ data <- data %>%
         )
     )
 
+# Sort remaining variables
 data <- data %>%
     select(
         id, # id column
