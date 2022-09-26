@@ -15,56 +15,93 @@ df_per <- df_per %>% mutate(
 # Join information from households and individuals
 data <- df_hog %>% left_join(df_per, by = "id")
 
-# TODO: verify aggregation... takes too long, explore parallelizing https://blog.aicry.com/multidplyr-dplyr-meets-parallel-processing/index.html
+fmax <- function(x, na.rm = TRUE) {
+    if (all(is.na(x))) {
+        return(x[1])
+    }
+    max(x, na.rm = na.rm)
+}
+
+fmin <- function(x, na.rm = TRUE) {
+    if (all(is.na(x))) {
+        return(x[1])
+    }
+    min(x, na.rm = na.rm)
+}
+# Agregate selected variables by household
 data <- data %>%
+    mutate(
+        across(
+            c(
+                P6210,
+                P6510,
+                P6585s1,
+                P6585s2,
+                P6585s3,
+                P6585s4,
+                P6920,
+                P7040,
+                P7090,
+                P7110,
+                P7500s1,
+                P7500s2,
+                P7500s3,
+                P7505,
+                P7510s1,
+                P7510s2,
+                P7510s3,
+                P7510s5,
+                P7510s6,
+                P7510s7
+            ), as.numeric
+        )
+    ) %>%
     group_by(id) %>%
     mutate(
-        P6020 = sum(P6020, na.rm = TRUE) / n(),
-        P6090 = sum(P6090, na.rm = TRUE) / n(),
+        P6020 = sum(P6020, na.rm = TRUE) / dplyr::n(),
+        P6090 = sum(P6090, na.rm = TRUE) / dplyr::n(),
         P6040 = mean(P6040, na.rm = TRUE),
-        P6210 = max(P6210, na.rm = TRUE),
-        P6760 = mean(P6760, na.rm = TRUE)
+        P6210 = fmax(P6210),
+        P6760 = mean(P6760, na.rm = TRUE),
+        Ingtot = sum(Ingtot, na.rm = TRUE)
     ) %>%
-    mutate_at(
-        vars(
+    mutate(
+        across(
             c(
-                "P6510",
-                "P6585s1",
-                "P6585s2",
-                "P6585s3",
-                "P6585s4",
-                "P6920",
-                "P7040",
-                "P7090",
-                "P7110",
-                "P7500s1",
-                "P7500s2",
-                "P7500s3",
-                "P7505",
-                "P7510s1",
-                "P7510s2",
-                "P7510s3",
-                "P7510s5",
-                "P7510s6",
-                "P7510s7"
-            )
-        ), ~ min(na.rm = TRUE)
+                P6510,
+                P6585s1,
+                P6585s2,
+                P6585s3,
+                P6585s4,
+                P6920,
+                P7040,
+                P7090,
+                P7110,
+                P7500s1,
+                P7500s2,
+                P7500s3,
+                P7505,
+                P7510s1,
+                P7510s2,
+                P7510s3,
+                P7510s5,
+                P7510s6,
+                P7510s7
+            ), ~ fmin(.)
+        )
     )
+
+# Collapse data back to household level
+data <- data %>% filter(Orden == 1)
+
+# NOTE: code from here onwards is experimental. DO NOT RUN
 
 
 # Select those variables whose number of na's does not exceed 33%
 # of the total number of observations
-data <- data %>%
-    select(
-        where(
-            ~ sum(is.na(.)) <= (nrow(data) * 0.33)
-        )
-    )
-
-# Sort remaining variables
-data <- data %>%
-    select(
-        id, # id column
-        matches(c("^Ing", "^Io")), # Variables starting with "Ing" or "Io"
-        order(tidyselect::peek_vars()) # The rest of available variables, ordered alphabetically
-    )
+# data <- data %>%
+#     select(
+#         where(
+#             ~ sum(is.na(.)) <= (nrow(data) * 0.33)
+#         )
+#     )
