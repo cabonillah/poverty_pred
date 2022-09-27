@@ -136,19 +136,19 @@ data <- data %>%
     mutate(
         across(
             c(
-                P5000,
-                P5010,
+                Depto,
                 P5090,
                 P6920,
                 P7040,
                 P7090,
                 P7505,
-                P6020,
-                P6090,
-                P6040,
                 P6210
             ), as.factor
         )
     )
 
-write_rds(data, "../stores/data.rds")
+if (file.exists("../stores/data.rds")) {
+    file.remove("../stores/data.rds")
+}
+
+write_rds(data, file = "../stores/data.rds")
