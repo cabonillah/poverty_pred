@@ -147,6 +147,7 @@ data <- data %>%
         )
     )
 
+# Store data file
 if (file.exists("../stores/data.rds")) {
     file.remove("../stores/data.rds")
 }
