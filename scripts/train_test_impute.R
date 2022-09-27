@@ -21,7 +21,7 @@ test <- data_split %>% testing()
 
 
 # Impute and normalize train and test sets
-rec <- recipe(Pobre ~ ., data = train)
+rec <- recipe(~., data = train)
 
 impute_norm <- rec %>%
     step_impute_mode(
