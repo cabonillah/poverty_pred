@@ -1,58 +1,45 @@
-install.packages("skimr")
-library(skimr)
-skim(imputed_train)
+rm(list = ls())
+source("../scripts/train_test_impute.R")
 
-#### LM ######
-imputed_train$Ingpcug <- imputed_train$Ingpcug+1e-15
-imputed_test$Ingpcug <- imputed_test$Ingpcug+1e-15
-mod_LM1 <- lm(log(Ingpcug) ~. , data = imputed_train)
-summary(mod_LM1)
+### LM 
+tune_specLM <- linear_reg() %>%
+  set_engine("lm")
 
-# Evaluamos el modelo de regresión lineal
+workflowLM <- workflow() %>%
+  add_recipe(rec_reg) %>%
+  add_model(tune_specLM)
 
-install.packages("MLmetrics")
-library(MLmetrics)
-install.packages("knitr")
-install.packages("kableExtra")
-library(knitr)
-library(kableExtra)
+# doParallel::registerDoParallel(7)
 
+tune_resultLM <- workflowLM %>%
+  tune_grid(
+    metrics = metric_set(rmse),
+    resamples = validation_split
+  )
 
-y_hat_in1 <- predict(mod_LM1, newdata = imputed_train)
-y_hat_out1 <- predict(mod_LM1, newdata = imputed_test)
+tune_resultLM%>% collect_metrics()
+tune_resultLM %>% show_best()
+tune_bestLM <- tune_resultLM %>% select_best()
+tune_bestLM
 
-# Convertimos la probabilidad en una predicción
+###### LOGIT ######
 
-acc_insample1 <- Accuracy(y_pred = y_hat_in1, y_true = imputed_train$Ingpcug)
-acc_outsample1 <- Accuracy(y_pred = y_hat_out1, y_true = imputed_test$Ingpcug)
+tune_specLOG <- logistic_reg() %>%
+  set_engine("glm")
 
-pre_insample1 <- Precision(y_pred = y_hat_in1, y_true = imputed_train$Ingpcug, positive = 1)
-pre_outsample1 <- Precision(y_pred = y_hat_out1, y_true = imputed_test$Ingpcug, positive = 1)
+workflowLOG <- workflow() %>%
+  add_recipe(rec_clas) %>%
+  add_model(tune_specLOG)
 
-rec_insample1 <- Recall(y_pred = y_hat_insample1, y_true = train$infielTRUE, positive = 1)
-rec_outsample1 <- Recall(y_pred = y_hat_outsample1, y_true = test$infielTRUE, positive = 1)
+# doParallel::registerDoParallel(7)
 
-f1_insample1 <- F1_Score(y_pred = y_hat_insample1, y_true = train$infielTRUE, positive = 1)
-f1_outsample1 <- F1_Score(y_pred = y_hat_outsample1, y_true = test$infielTRUE, positive = 1)
+tune_resultLOG <- workflowLOG %>%
+  tune_grid(
+    metrics = metric_set(f_score),
+    resamples = validation_split
+  )
 
-metricas_insample1 <- data.frame(Modelo = "Regresión lineal", 
-                                 "Muestreo" = NA, 
-                                 "Evaluación" = "Dentro de muestra",
-                                 "Accuracy" = acc_insample1,
-                                 "Precision" = pre_insample1,
-                                 "Recall" = rec_insample1,
-                                 "F1" = f1_insample1)
-
-metricas_outsample1 <- data.frame(Modelo = "Regresión lineal", 
-                                  "Muestreo" = NA, 
-                                  "Evaluación" = "Fuera de muestra",
-                                  "Accuracy" = acc_outsample1,
-                                  "Precision" = pre_outsample1,
-                                  "Recall" = rec_outsample1,
-                                  "F1" = f1_outsample1)
-
-metricas1 <- bind_rows(metricas_insample1, metricas_outsample1)
-metricas1 %>%
-  kbl(digits = 2)  %>%
-  kable_styling(full_width = T)
-
+tune_resultLOG %>% collect_metrics()
+tune_resultLOG %>% show_best()
+tune_bestLOG <- tune_resultLOG %>% select_best()
+tune_bestLOG
