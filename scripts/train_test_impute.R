@@ -57,22 +57,6 @@ rm(
     data
 )
 
-##################################################################
-
-tune_spec <- logistic_reg(
-    penalty = tune(),
-    mixture = tune()
-) %>%
-    set_engine("glmnet")
-
-param_grid <- expand.grid(
-    penalty = seq(0.005, 0.05, length.out = 5),
-    mixture = seq(0.1, 0.9, length.out = 5)
-)
-
-workflow <- workflow() %>%
-    add_recipe(rec_clas) %>%
-    add_model(tune_spec)
 
 f_score <- function(data,
                     truth,
@@ -95,17 +79,3 @@ f_score <- function(data,
 }
 
 f_score <- new_class_metric(f_score, "maximize")
-
-tune_result <- workflow %>%
-    tune_grid(
-        grid = param_grid,
-        metrics = metric_set(f_score),
-        resamples = validation_split
-    )
-
-tune_result %>% collect_metrics()
-
-tune_result %>% show_best()
-tune_best <- tune_result %>% select_best()
-
-tune_best
