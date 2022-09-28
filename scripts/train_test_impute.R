@@ -32,8 +32,22 @@ impute_norm <- rec %>%
     ) %>%
     prep()
 
-imputed_train <- impute_norm %>% bake(new_data = NULL)
-imputed_test <- impute_norm %>% bake(new_data = test)
+imputed_train_all <- impute_norm %>% bake(new_data = NULL)
+imputed_train_reg <- imputed_train_all %>% select(-Pobre, -Lp)
+imputed_train_clas <- imputed_train_all %>% select(-Ingpcug, -Lp)
+
+imputed_test_all <- impute_norm %>% bake(new_data = test)
+imputed_test_reg <- imputed_test_all %>% select(-Pobre, -Lp)
+imputed_test_clas <- imputed_test_all %>% select(-Ingpcug, -Lp)
 
 # Delete unnecesary variables
-rm(data, data_split, test, train, impute_norm, rec)
+rm(
+    data,
+    data_split,
+    test,
+    train,
+    impute_norm,
+    rec,
+    imputed_train_all,
+    imputed_test_all
+)
