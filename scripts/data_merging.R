@@ -65,6 +65,7 @@ data <- data %>%
     ) %>%
     group_by(id) %>%
     mutate(
+        Ingpcug = log(Ingpcug + 1e-15),
         Oc = sum(Oc, na.rm = TRUE) / dplyr::n(),
         P6020 = sum(P6020, na.rm = TRUE) / dplyr::n(),
         P6090 = sum(P6090, na.rm = TRUE) / dplyr::n(),
