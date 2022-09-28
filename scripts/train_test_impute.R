@@ -33,5 +33,7 @@ impute_norm <- rec %>%
     prep()
 
 imputed_train <- impute_norm %>% bake(new_data = NULL)
-
 imputed_test <- impute_norm %>% bake(new_data = test)
+
+# Delete unnecesary variables
+rm(data, data_split, test, train, impute_norm, rec)
