@@ -1,115 +1,145 @@
-rm(list=ls())
-############Downloading libraries
-library("tidyverse")
+rm(list = ls())
+setwd("scripts")
+source("../scripts/train_test_impute.R")
 
-p_load(dplyr, tidyverse, caret, MLmetrics, tidymodels, themis, glmnet)
-
-######Splitting data between train and test#######
-auto_split <- initial_split(data, prop =0.7)
-auto_train <- training(auto_split)
-
-##### Setting Cross Validation
-
-Auto_cv <- vfold_cv(auto_train, v=10)
-
-##### Creating the recipe for Poor model and Ingcug model
-
-rec_Pobre <- recipe(Pobre  ~ . -Ingpcug , data = auto_train) %>%
-  step_scale(all_numeric())
-
-rec_Ingreso <- recipe(Ingpcug  ~ . -Pobre , data = auto_train) %>%
-  step_scale(all_numeric())
-
-
-############################1.Categorical Model#################################
-####Creating Recipe for Ridge mixture =0
-
-ridge_grid <- expand_grid(penalty = seq (0,100, by=10))
-
-ridge_spec <- logistic_reg(penalty = tune(), mixture =0) %>%
+#######################1.Class Regression#######################################
+###Lasso
+class_tune_spec <- logistic_reg(
+  penalty = tune(),
+  mixture = tune()
+) %>%
   set_engine("glmnet")
 
-ridge_results <- fit_sample(ridge_spec,
-                      preprocessor = rec_Pobre,
-                      grid = ridge_grid,
-                      resample = Auto_cv)
-
-ridge_results %>%
-  collect_metrics()%>%
-  filter(.metric=="rmse") %>%
-  arrenge(mean)
-
-
-ridge_final_spec <- logistic_reg(penalty = , mixture = 0) %>%
-  set_engine("glmnet")
-
-##LOOK auto_split
-ridge_fit <- last_fit (ridge_final_spec,
-                 rec_Pobre,
-                 split =auto_split)
-ridge_fit %>%
-  collect_metrics()
-
-####Creating Recipe for Lasso mixture =1
-lasso_grid <- expand_grid(penalty = seq (0,100, by=10))
-
-lasso_spec <- logistic_reg(penalty = tune(), mixture =1) %>%
-  set_engine("glmnet")
-lasso_results <- fit_sample(ridge_spec,
-                      preprocessor = rec_Pobre,
-                      grid = lasso_grid,
-                      resample = Auto_cv)
-
-lasso_results %>%
-  collect_metrics()%>%
-  filter(.metric=="rmse") %>%
-  arrenge(mean)
-
-
-lasso_final_spec <- logistic_reg(penalty = , mixture =1 ) %>%
-  set_engine("glmnet")
-
-##LOOK auto_split
-lasso_fit <- last_fit (lasso_final_spec,
-                 rec_Pobre,
-                 split =auto_split)
-lasso_fit %>%
-  collect_metrics()
-
-####Fitting model and grid and for Elastic Net
-
-ElasticNet_grid <- expand_grid(penalty = seq (0,100, by=10),
-                    mixture = seq(0.1,0.9,by =0.1))
-
-ElasticNet_spec <- logistic_reg(penalty = tune(), mixture =tune()) %>%
-  set_engine("glmnet")%>% 
-  translate()
-
-ElasticNet_results <- fit_sample(ElasticNet_spec,
-                      preprocessor = rec_Pobre,
-                      grid = ElasticNet_grid,
-                      resample = Auto_cv)
-
-ElasticNet_results %>%
-  collect_metrics()%>%
-  filter(.metric=="F1") %>%
-  arrenge(mean)
-
-
-ElasticNet_final_spec <- logistic_reg(penalty = , mixture = ) %>%
-  set_engine("glmnet")
+lasso_param_grid <- expand.grid(
+  penalty = seq(0.001, 0.005, length.out = 5),
+  mixture = 1
+)
   
-##LOOK auto_split
-ElasticNet_fit <- last_fit (ElasticNet_final_spec,
-                 rec_Pobre,
-                 split =auto_split)
-ElasticNet_fit %>%
-  collect_metrics()
+  
+clas_workflow <- workflow() %>%
+  add_recipe(rec_clas) %>%
+  add_model(class_tune_spec)
 
+doParallel::registerDoParallel(7)
 
+class_lasso_tune_result <- clas_workflow %>%
+  tune_grid(
+    grid = lasso_param_grid,
+    metrics = metric_set(f_score),
+    resamples = validation_split
+  )
 
+class_lasso_tune_result %>% collect_metrics()
 
+class_lasso_tune_result %>% show_best()
+class_lasso_tune_result_best <- class_lasso_tune_result %>% select_best()
+
+class_lasso_tune_result_best
+
+###Ridge
+
+ridge_param_grid <- expand.grid(
+  penalty = seq(0.001, 0.005, length.out = 5),
+  mixture = 0
+)
+
+doParallel::registerDoParallel(7)
+
+class_ridge_tune_result <- clas_workflow %>%
+  tune_grid(
+    grid = ridge_param_grid,
+    metrics = metric_set(f_score),
+    resamples = validation_split
+  )
+
+class_ridge_tune_result %>% collect_metrics()
+
+class_ridge_tune_result %>% show_best()
+class_ridge_tune_result_best <- class_ridge_tune_result %>% select_best()
+
+class_ridge_tune_result_best
+
+###Elastic_Net
+elastic_param_grid <- expand.grid(
+  penalty = seq(0.001, 0.005, length.out = 5),
+  mixture = seq(0.1, 0.9, length.out = 5)
+)
+doParallel::registerDoParallel(7)
+
+class_elastic_tune_result <- clas_workflow %>%
+  tune_grid(
+    grid = elastic_param_grid,
+    metrics = metric_set(f_score),
+    resamples = validation_split
+  )
+
+class_elastic_tune_result %>% collect_metrics()
+
+class_elastic_tune_result %>% show_best()
+class_elastic_tune_result_best <- class_elastic_tune_result %>% select_best()
+
+class_elastic_tune_result_best
 ############################2.Regression Model##################################
+###Lasso
+reg_tune_spec <- linear_reg(
+  penalty = tune(),
+  mixture = tune()
+) %>%
+  set_engine("glmnet")
 
+reg_workflow <- workflow() %>%
+  add_recipe(rec_reg) %>%
+  add_model(reg_tune_spec)
+
+doParallel::registerDoParallel(7)
+
+reg_lasso_tune_result <- reg_workflow %>%
+  tune_grid(
+    grid = lasso_param_grid,
+    metrics = metric_set(rmse),
+    resamples = validation_split
+  )
+
+reg_lasso_tune_result %>% collect_metrics()
+
+reg_lasso_tune_result %>% show_best()
+reg_lasso_tune_result_best <- reg_lasso_tune_result %>% select_best()
+
+reg_lasso_tune_result_best
+
+###Ridge
+
+doParallel::registerDoParallel(7)
+
+reg_ridge_tune_result <- reg_workflow %>%
+  tune_grid(
+    grid = ridge_param_grid,
+    metrics = metric_set(rmse),
+    resamples = validation_split
+  )
+
+reg_ridge_tune_result %>% collect_metrics()
+
+reg_ridge_tune_result %>% show_best()
+reg_ridge_tune_result_best <- reg_ridge_tune_result %>% select_best()
+
+reg_ridge_tune_result_best
+
+###Elastic_Net
+doParallel::registerDoParallel(7)
+
+reg_elastic_tune_result <- reg_workflow %>%
+  tune_grid(
+    grid = elastic_param_grid,
+    metrics = metric_set(rmse),
+    resamples = validation_split
+  )
+
+reg_elastic_tune_result %>% collect_metrics()
+
+reg_elastic_tune_result %>% show_best()
+reg_elastic_tune_result_best <- reg_elastic_tune_result %>% select_best()
+
+reg_elastic_tune_result_best
 
 
