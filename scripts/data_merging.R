@@ -136,6 +136,7 @@ data <- data %>%
     mutate(
         across(
             c(
+                Pobre,
                 Depto,
                 P5090,
                 P6920,
