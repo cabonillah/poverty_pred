@@ -1,5 +1,7 @@
 rm(list = ls())
 source("../scripts/train_test_impute.R")
+library(knitr)
+library(kableExtra)
 
 ### LM 
 tune_specLM <- linear_reg() %>%
@@ -18,10 +20,11 @@ tune_resultLM <- workflowLM %>%
   )
 
 tune_resultLM%>% collect_metrics()
-tune_resultLM %>% show_best()
-tune_bestLM <- tune_resultLM %>% select_best()
-tune_bestLM
+tableLM <- data.frame(Modelo = "LINEAL", 
+                      tune_resultLM %>% show_best())
 
+                       
+                          
 ###### LOGIT ######
 
 tune_specLOG <- logistic_reg() %>%
@@ -41,5 +44,15 @@ tune_resultLOG <- workflowLOG %>%
 
 tune_resultLOG %>% collect_metrics()
 tune_resultLOG %>% show_best()
-tune_bestLOG <- tune_resultLOG %>% select_best()
-tune_bestLOG
+tableLOG <- data.frame(Modelo = "LOGIT", 
+                       tune_resultLOG %>% show_best())
+
+resultados <- rbind(tableLM[1:6], tableLOG[1:6])
+colnames(resultados) <- c("Modelo", "Medida de desempeño", "Estimador","Media", "n", "s.d Error")
+
+kable(resultados, digits = 2) %>%
+  kable_styling()
+
+
+
+
