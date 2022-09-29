@@ -37,7 +37,7 @@ class_lasso_tune_result_best
 ###Ridge
 
 ridge_param_grid <- expand.grid(
-  penalty = seq(0.001, 0.005, length.out = 5),
+  penalty = seq(0.001, 0.005, length.out = 2),
   mixture = 0
 )
 
@@ -59,8 +59,8 @@ class_ridge_tune_result_best
 
 ###Elastic_Net
 elastic_param_grid <- expand.grid(
-  penalty = seq(0.001, 0.005, length.out = 5),
-  mixture = seq(0.1, 0.9, length.out = 5)
+  penalty = seq(0.001, 0.005, length.out = 2),
+  mixture = seq(0.1, 0.9, length.out = 2)
 )
 doParallel::registerDoParallel(7)
 
