@@ -22,10 +22,10 @@ reg_rf_grid <- expand.grid(
 ##########################1.Classification Model################################
 
 class_rf_tuner <- 
-  rand_forest(engine = "ranger", 
+  rand_forest(trees = 300,engine = "ranger", 
               mtry = tune(),
               min_n = tune(),
-              ntree =tune()) %>% 
+              ) %>% 
   set_mode("classification")
 
 #rf_mod <- 
