@@ -1,5 +1,7 @@
 rm(list = ls())
 source("../scripts/train_test_impute.R")
+library(knitr)
+library(kableExtra)
 
 ############################0.TUNE PARAMS#######################################
 class_tune_spec <- logistic_reg(
@@ -43,8 +45,10 @@ class_lasso_tune_result <- clas_workflow %>%
   )
 class_lasso_tune_result %>% collect_metrics()
 class_lasso_tune_result %>% show_best()
-class_lasso_tune_result_best <- class_lasso_tune_result %>% select_best()
-class_lasso_tune_result_best
+tableLasso <- data.frame(Problema= "Clasificación", Modelo = "Lasso", 
+                      class_lasso_tune_result %>% show_best())
+
+
 ###Ridge
 class_ridge_tune_result <- clas_workflow %>%
   tune_grid(
@@ -54,8 +58,9 @@ class_ridge_tune_result <- clas_workflow %>%
   )
 class_ridge_tune_result %>% collect_metrics()
 class_ridge_tune_result %>% show_best()
-class_ridge_tune_result_best <- class_ridge_tune_result %>% select_best()
-class_ridge_tune_result_best
+tableRidge <- data.frame(Problema= "Clasificación", Modelo = "Ridge", 
+                         class_ridge_tune_result %>% show_best())
+
 ###Elastic_Net
 class_elastic_tune_result <- clas_workflow %>%
   tune_grid(
@@ -65,8 +70,9 @@ class_elastic_tune_result <- clas_workflow %>%
   )
 class_elastic_tune_result %>% collect_metrics()
 class_elastic_tune_result %>% show_best()
-class_elastic_tune_result_best <- class_elastic_tune_result %>% select_best()
-class_elastic_tune_result_best
+tableElasticNet <- data.frame(Problema= "Clasificación", Modelo = "Elastic Net", 
+                              class_elastic_tune_result %>% show_best())
+
 ############################2.Regression Model##################################
 ###Lasso
 reg_lasso_tune_result <- reg_workflow %>%
@@ -77,8 +83,9 @@ reg_lasso_tune_result <- reg_workflow %>%
   )
 reg_lasso_tune_result %>% collect_metrics()
 reg_lasso_tune_result %>% show_best()
-reg_lasso_tune_result_best <- reg_lasso_tune_result %>% select_best()
-reg_lasso_tune_result_best
+tableLassoReg <- data.frame(Problema= "Regresión", Modelo = "Lasso", 
+                            reg_lasso_tune_result %>% show_best())
+
 ###Ridge
 reg_ridge_tune_result <- reg_workflow %>%
   tune_grid(
@@ -88,8 +95,9 @@ reg_ridge_tune_result <- reg_workflow %>%
   )
 reg_ridge_tune_result %>% collect_metrics()
 reg_ridge_tune_result %>% show_best()
-reg_ridge_tune_result_best <- reg_ridge_tune_result %>% select_best()
-reg_ridge_tune_result_best
+tableRidgeReg <- data.frame(Problema= "Regresión", Modelo = "Ridge", 
+                            reg_ridge_tune_result %>% show_best())
+
 ###Elastic_Net
 reg_elastic_tune_result <- reg_workflow %>%
   tune_grid(
@@ -101,5 +109,12 @@ reg_elastic_tune_result %>% collect_metrics()
 reg_elastic_tune_result %>% show_best()
 reg_elastic_tune_result_best <- reg_elastic_tune_result %>% select_best()
 reg_elastic_tune_result_best
+tableElasticNetReg <- data.frame(Problema= "Regresión", Modelo = "Elastic Net", 
+                                 reg_elastic_tune_result %>% show_best())
 
+resultados <- rbind(tableLasso[1:9], tableRidge[1:9], tableElasticNet[1:9],tableLassoReg[1:9], tableRidgeReg[1:9], tableElasticNetReg[1:9] )
+colnames(resultados) <- c("Problema", "Modelo","Penalidad","Mixtura", "Medida de desempeño", "Estimador","Media", "Fold", "s.d Error")
+
+kable(resultados, digits = 4) %>%
+  kable_styling()
 

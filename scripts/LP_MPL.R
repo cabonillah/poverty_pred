@@ -20,7 +20,8 @@ tune_resultLM <- workflowLM %>%
   )
 
 tune_resultLM%>% collect_metrics()
-tableLM <- data.frame(Modelo = "LINEAL", 
+tableLM <- data.frame(Problema = "Regresión", Modelo = "LINEAL", 
+                      Penalidad = "0", Mixtura = "0",
                       tune_resultLM %>% show_best())
 
                        
@@ -44,7 +45,8 @@ tune_resultLOG <- workflowLOG %>%
 
 tune_resultLOG %>% collect_metrics()
 tune_resultLOG %>% show_best()
-tableLOG <- data.frame(Modelo = "LOGIT", 
+tableLOG <- data.frame(Problema = "Regresión", Modelo = "LOGIT", 
+                       Penalidad = "0", Mixtura = "0", 
                        tune_resultLOG %>% show_best())
 
 resultados <- rbind(tableLM[1:6], tableLOG[1:6])
