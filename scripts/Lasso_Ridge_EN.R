@@ -7,6 +7,7 @@ class_tune_spec <- logistic_reg(
   mixture = tune()
 ) %>%
   set_engine("glmnet")
+
 clas_workflow <- workflow() %>%
   add_recipe(rec_clas) %>%
   add_model(class_tune_spec)
@@ -15,6 +16,7 @@ reg_tune_spec <- linear_reg(
   mixture = tune()
 ) %>%
   set_engine("glmnet")
+
 reg_workflow <- workflow() %>%
   add_recipe(rec_reg) %>%
   add_model(reg_tune_spec)
