@@ -66,7 +66,7 @@ f_score <- function(data,
                     na_rm,
                     case_weights,
                     ...) {
-    f_meas(
+    yardstick::f_meas(
         data = data,
         truth = !!rlang::enquo(truth),
         estimate = !!rlang::enquo(estimate),
