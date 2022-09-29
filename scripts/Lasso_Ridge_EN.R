@@ -1,5 +1,4 @@
 rm(list = ls())
-setwd("scripts")
 source("../scripts/train_test_impute.R")
 
 #######################1.Class Regression#######################################
@@ -11,10 +10,9 @@ class_tune_spec <- logistic_reg(
   set_engine("glmnet")
 
 lasso_param_grid <- expand.grid(
-  penalty = seq(0.001, 0.005, length.out = 5),
+  penalty = seq(0.001, 0.005, length.out = 2),
   mixture = 1
 )
-  
   
 clas_workflow <- workflow() %>%
   add_recipe(rec_clas) %>%
