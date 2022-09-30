@@ -87,13 +87,13 @@ class_rf_wf <- workflow() %>%
   collect_metrics(reg_rf_results)
   
   reg_rf_results %>% 
-    show_best(metric = "roc_auc", n = 5)
+    show_best(metric = "rmse", n = 5)
   
-  class_rf_results %>% autoplot()
+  reg_rf_results %>% autoplot()
   
   alz_best <-
-    class_rf_results %>% 
-    select_best(metric = "roc_auc")
+    reg_rf_results %>% 
+    select_best(metric = "rmse")
   alz_best
   
   last_rf_workflow <- 
