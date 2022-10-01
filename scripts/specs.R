@@ -63,7 +63,10 @@ specs <- function(model, reg_clas) {
             mtry = tune(),
             min_n = tune(),
             sample_size = tune(),
-            stop_iter = 5
+            stop_iter = 5,
+            tree_depth = tune(),
+            learn_rate = tune(),
+            loss_reduction = tune()
         ) %>%
             set_engine("xgboost", nthread = 3) %>%
             set_mode("regression")
@@ -76,7 +79,10 @@ specs <- function(model, reg_clas) {
             mtry = tune(),
             min_n = tune(),
             sample_size = tune(),
-            stop_iter = 5
+            stop_iter = 5,
+            tree_depth = tune(),
+            learn_rate = tune(),
+            loss_reduction = tune()
         ) %>%
             set_engine("xgboost", nthread = 3) %>%
             set_mode("classification")
