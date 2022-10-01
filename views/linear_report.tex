@@ -1,0 +1,22 @@
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: sá., oct. 01, 2022 - 13:16:57
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}} ccccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & Problema & Modelo & Penalidad & Mixtura & Metrica & Valor & Error & over\_ratio \\ 
+\hline \\[-1.8ex] 
+1 & Reg. & Lineal & N/A & N/A & rmse & $3.347$ & $0.060$ & N/A \\ 
+2 & Clas. & Lineal & N/A & N/A & f\_meas & $0.816$ & $0.0003$ & 0.5 \\ 
+3 & Reg. & Ridge & N/A & 0 & rmse & $3.335$ & $0.072$ & N/A \\ 
+4 & Clas. & Ridge & 0.0001 & 0 & f\_meas & $0.814$ & $0.001$ & 0.75 \\ 
+5 & Reg. & Lasso & 0.00055 & 1 & rmse & $3.333$ & $0.072$ & N/A \\ 
+6 & Clas. & Lasso & 0.0001 & 1 & f\_meas & $0.815$ & $0.001$ & 0.25 \\ 
+7 & Reg. & Elastic Net & 0.00055 & 0.9 & rmse & $3.334$ & $0.072$ & N/A \\ 
+8 & Clas. & Elastic Net & 0.000325 & 0.3666667 & f\_meas & $0.815$ & $0.0005$ & 0.25 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
