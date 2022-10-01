@@ -36,7 +36,7 @@ Documento con la descripción de las variables
 - ridge_reg.rds
 - xgb_clas.rds
 - xgb_reg.rds
-- predictions_Bonilla_Santofimio_Velasquez_cX_rX.csv
+- predictions_Bonilla_Santofimio_Velasquez_c11_r11.csv
 Este archivo contiene las predicciones del mejor modelo de clasificación y regresión respectivamente. 
 
 
