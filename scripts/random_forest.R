@@ -11,12 +11,12 @@ train %>%
   mutate(prop = n/sum(n))
 
 class_rf_grid <- expand.grid(
-  mtry = c(1,5,7), min_n = 1:5
+  mtry = c(1,5), min_n = 1:3
 )
 
 
 reg_rf_grid <- expand.grid(
-  mtry = c(1,5,7), min_n = 1:5
+  mtry = c(1,5), min_n = 1:3
 )
 
 ##########################1.Classification Model################################

@@ -30,7 +30,7 @@ data_split <- data %>% initial_split(prop = 0.7)
 train <- data_split %>% training()
 test <- data_split %>% testing()
 
-
+set.seed(10)
 validation_split <- vfold_cv(train, v = 5)
 
 # Recipes for imputing in regression and classification
@@ -43,6 +43,7 @@ rec_reg <- recipe(Ingpcug ~ ., data = train) %>%
         P6920, P7040, P7090, P7505
     )
 
+set.seed(10)
 rec_clas <- recipe(Pobre ~ ., data = train) %>%
     step_rm(Lp, Ingpcug) %>%
     step_impute_mode(
@@ -50,32 +51,12 @@ rec_clas <- recipe(Pobre ~ ., data = train) %>%
     ) %>%
     step_dummy(
         P6920, P7040, P7090, P7505
-    )
+    ) %>%
+    step_upsample(Pobre, over_ratio = tune()) %>%
+    step_downsample(Pobre)
 
-# Delete unnecesary variables
-rm(
-    data
-)
+rec_reg_rf <- rec_reg %>%
+    step_rm(tidyselect::contains(c("P75051", "Depto", "P6210")))
 
-
-f_score <- function(data,
-                    truth,
-                    estimate,
-                    beta,
-                    estimator,
-                    na_rm,
-                    case_weights,
-                    ...) {
-    yardstick::f_meas(
-        data = data,
-        truth = !!rlang::enquo(truth),
-        estimate = !!rlang::enquo(estimate),
-        beta = 1,
-        estimator = NULL,
-        na_rm = TRUE,
-        case_weights = NULL,
-        ...
-    )
-}
-
-f_score <- new_class_metric(f_score, "maximize")
+rec_clas_rf <- rec_clas %>%
+    step_rm(tidyselect::contains(c("P75051", "Depto", "P6210")))
