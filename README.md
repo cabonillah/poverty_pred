@@ -1,6 +1,6 @@
 # Predicting Poverty
 
-Este repositorio corresponde al proyecto de predicción de la pobreza monetaria para el curso Big Data and Machine Learning for Applied Economics 2022.
+Este repositorio corresponde al proyecto de predicción de la pobreza monetaria para el curso.
 Autores:
 [Camilo Bonilla](https://github.com/cabonillah),  [Nicolás Velásquez](https://github.com/Nicolas-Velasquez-Oficial) y  [Rafael Santofimio](https://github.com/rasantofimior/)
 
@@ -36,7 +36,7 @@ Documento con la descripción de las variables
 - ridge_reg.rds
 - xgb_clas.rds
 - xgb_reg.rds
-- predictions_Bonilla_Santofimio_Velasquez_c4_r5.csv
+- predictions_Bonilla_Santofimio_Velasquez_cX_rX.csv
 Este archivo contiene las predicciones del mejor modelo de clasificación y regresión respectivamente. 
 
 
@@ -85,6 +85,6 @@ Las Figuras y tablas estan alojadas en la carpeta "views" nombradas de la siguie
     - Seleccion_aletoria_predictores_RF.png
 Notas:
 
--   Los Scripts descriptives_punto2.R, Punto_3.R y performance_tests.R, llaman al modulo dentro del script data_cleaning.R el cual estandariza la data utilizada.
--   Si se ejecutan los scripts desde programas como R Studio, se debe asegurar antes que el directorio base se configure en "Problem-Set1\scripts".
+-   Los Scripts XXXXXXXX, llaman al modulo dentro del script XXXXXXX el cual estandariza la data utilizada.
+-   Si se ejecutan los scripts desde programas como R Studio, se debe asegurar antes que el directorio base se configure en "poverty_pred\scripts".
 -   Se recomienda enfacticamnete seguir las instrucciones y comentarios del código (en orden y forma). Así mismo, es importante que antes de verificar la              replicabilidad del código, se asegure de tener **todos** los requerimientos informáticos previamente mencionados (i.e. se prefieren versiones de **R** menores a la 4.2.1. para evitar que paquetes, funciones y métodos que han sido actualizados no funcionen). Además, la velocidad de ejecución dependerá de las características propias de su máquina, por lo que deberá (o no) tener paciencia mientras se procesa.*
