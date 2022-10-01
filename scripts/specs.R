@@ -25,6 +25,32 @@ specs <- function(model, reg_clas) {
             set_mode("classification")
     }
 
+    # XGB - Regression
+    if (model == "xgb" && reg_clas == "reg") {
+        spec <- rand_forest(
+            trees = 200,
+            mtry = tune(),
+            min_n = tune(),
+            sample_size = tune(),
+            stop_iter = 5
+        ) %>%
+            set_engine("xgboost", nthread = 3) %>%
+            set_mode("regression")
+    }
+
+    # XGB - Classification
+    if (model == "xgb" && reg_clas == "clas") {
+        spec <- rand_forest(
+            trees = 200,
+            mtry = tune(),
+            min_n = tune(),
+            sample_size = tune(),
+            stop_iter = 5
+        ) %>%
+            set_engine("xgboost", nthread = 3) %>%
+            set_mode("classification")
+    }
+
     # Linear - Regression
     if (model == "lm" && reg_clas == "reg") {
         spec <- linear_reg() %>%
