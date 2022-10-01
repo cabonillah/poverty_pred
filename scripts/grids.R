@@ -3,9 +3,9 @@ grids <- function(model, reg_clas) {
     penalty <- seq(0.0001, 0.001, length.out = 5)
     mixture <- seq(0.1, 0.9, length.out = 4)
     over_ratio <- c(0.25, 0.5, 0.75)
-    mtry <- c(5, 7, 10)
-    min_n <- 6:8
-
+    mtry <- c(5, 8, 12)
+    min_n <- c(10, 20, 30)
+    sample_size <- c(1000, 5000, 10000)
 
     # Linear - Classification
     if (model == "lm" && reg_clas == "clas") {
@@ -80,6 +80,25 @@ grids <- function(model, reg_clas) {
             over_ratio = over_ratio,
             mtry = mtry,
             min_n = min_n
+        )
+
+    # XGB - Regression
+    if (model == "xgb" && reg_clas == "reg") {
+        grid <- expand.grid(
+            mtry = mtry,
+            min_n = min_n,
+            sample_size = sample_size
+        )
+    }
+
+
+    # XGB - Classification
+    if (model == "xgb" && reg_clas == "clas") {
+        grid <- expand.grid(
+            over_ratio = over_ratio,
+            mtry = mtry,
+            min_n = min_n,
+            sample_size = sample_size
         )
     }
 

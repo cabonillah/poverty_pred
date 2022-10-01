@@ -18,6 +18,20 @@ workflows <- function(model, reg_clas) {
             add_model(spec)
     }
 
+    # XGB Regression
+    if (model == "xgb" && reg_clas == "reg") {
+        workflow <- workflow() %>%
+            add_recipe(rec_reg_rf) %>%
+            add_model(spec)
+    }
+
+    # XGB Classification
+    if (model == "xgb" && reg_clas == "clas") {
+        workflow <- workflow() %>%
+            add_recipe(rec_clas_rf) %>%
+            add_model(spec)
+    }
+
     # Regression
     if (reg_clas == "reg") {
         workflow <- workflow() %>%

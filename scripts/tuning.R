@@ -32,7 +32,7 @@ tuning <- function(object, model, reg_clas, grid, resamples, ...) {
         )
     }
 
-    if (model %in% c("lm", "lasso", "ridge", "elastic", "rf") && reg_clas == "clas") {
+    if (model %in% c("lm", "lasso", "ridge", "elastic", "rf", "xgb") && reg_clas == "clas") {
         tune <- tune::tune_grid(
             object = object,
             grid = grid,
