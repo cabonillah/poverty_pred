@@ -5,7 +5,7 @@ grids <- function(model, reg_clas) {
     over_ratio <- c(0.25, 0.5, 0.75)
     mtry <- c(5, 8, 12)
     min_n <- c(10, 20, 30)
-    sample_size <- c(1000, 5000, 10000)
+    sample_size <- c(0.5, 0.75, 1)
 
     # Linear - Classification
     if (model == "lm" && reg_clas == "clas") {
