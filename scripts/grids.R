@@ -81,7 +81,7 @@ grids <- function(model, reg_clas) {
             mtry = mtry,
             min_n = min_n
         )
-
+    }
     # XGB - Regression
     if (model == "xgb" && reg_clas == "reg") {
         grid <- expand.grid(
@@ -90,7 +90,6 @@ grids <- function(model, reg_clas) {
             sample_size = sample_size
         )
     }
-
 
     # XGB - Classification
     if (model == "xgb" && reg_clas == "clas") {
