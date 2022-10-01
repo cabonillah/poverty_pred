@@ -27,7 +27,6 @@ metric <- f_score(
 # Final report for this model
 report <- data.frame(
     Problema = "Clas.", Modelo = "Random Forest",
-    Penalidad = "0.000325", Mixtura = "0.3666667",
     result %>% show_best(n = 1) %>% mutate(mean = metric)
 )
 
