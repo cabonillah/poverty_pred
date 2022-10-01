@@ -3,7 +3,7 @@ grids <- function(model, reg_clas) {
     penalty <- seq(0.0001, 0.001, length.out = 5)
     mixture <- seq(0.1, 0.9, length.out = 4)
     over_ratio <- c(0.25, 0.5, 0.75)
-    mtry <- c(1, 5)
+    mtry <- c(5, 7, 10)
     min_n <- 6:8
 
 

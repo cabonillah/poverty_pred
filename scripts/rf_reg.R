@@ -5,8 +5,10 @@ source("../scripts/tuning.R")
 
 wf <- workflows("rf", "reg")
 grid <- grids("rf", "reg")
-doParallel::registerDoParallel(3)
+cl <- parallel::makeCluster(3)
 result <- wf %>% tuning("rf", "reg", grid, validation_split)
+parallel::stopCluster(cl)
+
 result %>% collect_metrics()
 
 # Select best model
@@ -28,7 +30,6 @@ metric <- rmse(
 # Final report for this model
 report <- data.frame(
     Problema = "Reg.", Modelo = "Random Forest",
-    Penalidad = "0.00055", Mixtura = "0.9",
     result %>% show_best(n = 1) %>% mutate(mean = metric)
 )
 
