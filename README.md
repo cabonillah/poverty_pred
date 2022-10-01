@@ -85,6 +85,5 @@ Las Figuras y tablas estan alojadas en la carpeta "views" nombradas de la siguie
     - Seleccion_aletoria_predictores_RF.png
 Notas:
 
--   Los Scripts XXXXXXXX, llaman al modulo dentro del script XXXXXXX el cual estandariza la data utilizada.
 -   Si se ejecutan los scripts desde programas como R Studio, se debe asegurar antes que el directorio base se configure en "poverty_pred\scripts".
 -   Se recomienda enfacticamnete seguir las instrucciones y comentarios del código (en orden y forma). Así mismo, es importante que antes de verificar la              replicabilidad del código, se asegure de tener **todos** los requerimientos informáticos previamente mencionados (i.e. se prefieren versiones de **R** menores a la 4.2.1. para evitar que paquetes, funciones y métodos que han sido actualizados no funcionen). Además, la velocidad de ejecución dependerá de las características propias de su máquina, por lo que deberá (o no) tener paciencia mientras se procesa.*
