@@ -5,7 +5,7 @@ source("../scripts/tuning.R")
 
 wf <- workflows("xgb", "reg")
 grid <- grids("xgb", "reg")
-cl <- parallel::makeCluster(3)
+cl <- parallel::makeCluster(7)
 set.seed(10)
 result <- wf %>% tuning("xgb", "reg", grid, validation_split)
 parallel::stopCluster(cl)

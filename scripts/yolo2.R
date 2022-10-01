@@ -1,6 +1,6 @@
-source("../scripts/rf_clas.R")
+source("../scripts/xgb_clas.R")
 saveRDS(result, file = "../../results3.rds")
-source("../scripts/rf_reg.R")
+source("../scripts/xgb_reg.R")
 saveRDS(result, file = "../../results4.rds")
 
 XGB_CLASS <- readRDS("../../results3.rds")
