@@ -110,6 +110,7 @@ data <- data %>%
 
 
 data <- data %>% select(
+    id,
     Depto,
     Nper,
     Oc,
