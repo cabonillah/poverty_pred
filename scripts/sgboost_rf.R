@@ -55,7 +55,7 @@ class_xgb_res <- class_xgb_wf %>%
 
 ###Collecting metrics
 
-collect_metrics(xgb_res)
+collect_metrics(class_xgb_res)
 
 
 library(vip)
