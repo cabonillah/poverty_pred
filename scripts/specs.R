@@ -17,7 +17,7 @@ specs <- function(model, reg_clas) {
     # RF - Classification
     if (model == "rf" && reg_clas == "clas") {
         spec <- rand_forest(
-            trees = 300,
+            trees = 200,
             mtry = tune(),
             min_n = tune(),
         ) %>%

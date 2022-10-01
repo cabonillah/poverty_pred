@@ -5,6 +5,7 @@ source("../scripts/tuning.R")
 
 wf <- workflows("rf", "reg")
 grid <- grids("rf", "reg")
+doParallel::registerDoParallel(3)
 result <- wf %>% tuning("rf", "reg", grid, validation_split)
 result %>% collect_metrics()
 
